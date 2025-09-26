@@ -1,10 +1,14 @@
 from abc import ABC, abstractmethod
 
 class Diccionario(ABC):
+    """
+    Clase abstracta Diccionario. Dicta los métodos que deben tener los diccionarios.
+    
+    """
     @abstractmethod
     def inserte(self, elemento):
         """
-        Inserta un elmento. Puede ser repetido.
+        Inserta un elemento. Puede ser repetido.
         """
         pass
 
