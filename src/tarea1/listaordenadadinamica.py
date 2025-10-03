@@ -1,4 +1,4 @@
-from diccionario import Diccionario
+from tarea1.diccionario import Diccionario
 
 class Nodo:
     def __init__(self, elemento:str=''):#constructor, se ejecuta al crear un nodo
