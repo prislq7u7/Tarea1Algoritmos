@@ -1,24 +1,21 @@
 from .diccionario import Diccionario
-
-
-#fom listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
+from .listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
 
 class TablaHashAbierta(Diccionario):#herencia de Diccionario
-    pass
     
-""""
-    def __init__(self, capacidad=10, carga_max=0.7):
-        self.__capacidad = capacidad
-        self.__carga_max = carga_max
-        self.__tamanno = 0
-        self.__buckets = [ListaOrdenadaDinamica() for F in range(capacidad)]#bucket es ubicación de memoria
+    def __init__(self, capacidad=10, carga_max=0.7):#constructor
+        self.__capacidad = capacidad #número de buckets de la tabla hash
+        self.__carga_max = carga_max #factor de carga máximo permitido
+        self.__tamanno = 0 #cuántps elementos hay en total
+        self.__buckets = [ListaOrdenadaDinamica() for F in range(capacidad)]#bucket es ubicación de memoria, crea array de listas vacías, c/u lista es un bucket
       
     def __len__(self):
         return self.__tamanno  
     
-    def __funcion_hash(self, elemento: str) -> int:#función para strings
+    def __funcion_hash(self, elemento: str) -> int:#función para convertir string a número para saber en qué bucket va
         val_hash = 0
         for char in elemento:
-            val_hash = (val_hash * 31 + ord(char)) % self.__capacidad
+            val_hash = (val_hash * 31 + ord(char)) % self.__capacidad#ord(char) da valor ASCII
         return val_hash
-"""
+    
+    
