@@ -1,7 +1,7 @@
 from diccionario import Diccionario
 
 
-#rom listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
+#fom listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
 
 class TablaHashAbierta(Diccionario):#herencia de Diccionario
     pass
