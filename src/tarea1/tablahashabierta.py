@@ -1,12 +1,8 @@
 from diccionario import Diccionario
-
-
-#rom listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
+from listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
 
 class TablaHashAbierta(Diccionario):#herencia de Diccionario
-    pass
     
-""""
     def __init__(self, capacidad=10, carga_max=0.7):
         self.__capacidad = capacidad
         self.__carga_max = carga_max
@@ -21,4 +17,3 @@ class TablaHashAbierta(Diccionario):#herencia de Diccionario
         for char in elemento:
             val_hash = (val_hash * 31 + ord(char)) % self.__capacidad
         return val_hash
-"""
