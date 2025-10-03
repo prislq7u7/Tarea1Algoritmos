@@ -1,4 +1,4 @@
-from diccionario import Diccionario
+from .diccionario import Diccionario
 
 
 #fom listaordenadadinamica import ListaOrdenadaDinamica#cada bucket es una lista ordenada dinámica
