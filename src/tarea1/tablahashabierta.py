@@ -18,4 +18,8 @@ class TablaHashAbierta(Diccionario):#herencia de Diccionario
             val_hash = (val_hash * 31 + ord(char)) % self.__capacidad#ord(char) da valor ASCII
         return val_hash
     
+    def inserte(self, elemento : str):
+        if self.__factor_carga() >= self.__carga_max:
+            self.__redimensionar(self.__capacidad * 2)#si la tabla está muy llena se duplica su tamaño
+    
     
