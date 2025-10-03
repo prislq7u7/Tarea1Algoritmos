@@ -15,9 +15,9 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-from tarea1.diccionario import Diccionario
-from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
-from tarea1.listaordenadaestatica import ListaOrdenadaEstática
+from diccionario import Diccionario
+from listaordenadadinamica import ListaOrdenadaDinámica
+from listaordenadaestatica import ListaOrdenadaEstática
 
 console = Console()
 
@@ -261,10 +261,10 @@ def menu_diccionario(diccionario: Diccionario) -> None:
 def main() -> None:
     opcion = menu_etapa()
     match opcion:
-        case 1:
+        case "1":
             diccionario = menu_clase()
             menu_diccionario(diccionario)
-        case 2:
+        case "2":
             pass
 
 

@@ -1,4 +1,4 @@
-from tarea1.diccionario import Diccionario
+from diccionario import Diccionario
 
 class Nodo:
     def __init__(self, elemento:str=''):#constructor, se ejecuta al crear un nodo
@@ -20,21 +20,29 @@ class ListaOrdenadaDinámica(Diccionario):
         pass
 
     def inserte(self, elemento):
-        referencia: Nodo = self.__cabeza
-        nodo = Nodo(elemento)
-        if referencia.siguiente is None:
-            referencia.siguiente = nodo
-        else:
-            while referencia.siguiente.siguiente is not None and elemento > referencia.siguiente.elemento:
-                referencia = referencia.siguiente
-            nodo.siguiente = referencia.siguiente
-            referencia.siguiente = nodo
+        nuevo_nodo = Nodo(elemento)
+        actual = self.__cabeza
+        while actual.siguiente is not None and actual.siguiente.elemento < elemento:
+            actual = actual.siguiente
+        nuevo_nodo.siguiente = actual.siguiente
+        actual.siguiente = nuevo_nodo
+        self.__tamaño += 1
 
     def borre(self, elemento):
-        pass
+        actual = self.__cabeza
+        while actual.siguiente is not None:
+            if actual.siguiente.elemento == elemento:
+                actual.siguiente = actual.siguiente.siguiente
+                self.__tamaño -= 1
+                return True
+            if actual.siguiente.elemento > elemento:
+                return False
+            actual = actual.siguiente
+        return False#llegó al final y no lo encontró
 
     def limpie(self):
-        pass
+        self.__cabeza.siguiente = None
+        self.__tamaño = 0
 
     def miembro(self, elemento: str) -> bool:
         actual = self.__cabeza.siguiente #empieza en el primer nodo real
@@ -51,40 +59,13 @@ class ListaOrdenadaDinámica(Diccionario):
         print(self)
 
     def __str__(self) -> str:
-        pass
+        elementos = []
+        actual = self.__cabeza.siguiente
+        while actual is not None:
+            elementos.append(actual.elemento)
+            actual = actual.siguiente
+        return " -> ".join(elementos) if elementos else "Lista vacía"
     
     def __del__(self):
         pass
     
-    
-    
-    # 🧪 PRUEBA RÁPIDA - luego la borramos
-if __name__ == "__main__":
-    print("=== PRUEBA LISTA DINÁMICA ===")
-    
-    # Crear lista
-    lista = ListaOrdenadaDinámica()
-    print("Lista creada. Tamaño:", len(lista))
-    
-    # Insertar algunos elementos (usamos el método existente)
-    lista.inserte("banana")
-    lista.inserte("apple")
-    lista.inserte("cherry")
-    print("Elementos insertados: apple, banana, cherry")
-    print("Tamaño actual:", len(lista))
-    
-    print("\n--- Probando búsquedas ---")
-    
-    # Buscar elementos que SÍ existen
-    print("¿Existe 'apple'?", lista.miembro("apple"))
-    print("¿Existe 'banana'?", lista.miembro("banana")) 
-    print("¿Existe 'cherry'?", lista.miembro("cherry"))
-    
-    # Buscar elementos que NO existen
-    print("¿Existe 'zebra'?", lista.miembro("zebra"))
-    print("¿Existe 'ant'?", lista.miembro("ant"))
-    print("¿Existe 'dog'?", lista.miembro("dog"))
-    
-    print("\n--- Probando caso especial ---")
-    # Buscar palabra que debería estar entre apple y banana
-    print("¿Existe 'apricot'?", lista.miembro("apricot"))
