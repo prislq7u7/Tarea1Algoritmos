@@ -6,7 +6,7 @@ requires-python = ">=3.13"
 dependencies = ["rich>=14.1.0"]
 
 [project.scripts]
-tarea1 = "tarea1:main"  # ejecuta main() de src/tarea1/__init__.py
+tarea1 = "tarea1:main" 
 
 [build-system]
 requires = ["uv_build>=0.8.5,<0.9.0"]
