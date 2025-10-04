@@ -21,5 +21,9 @@ class TablaHashAbierta(Diccionario):#herencia de Diccionario
     def inserte(self, elemento : str):
         if self.__factor_carga() >= self.__carga_max:
             self.__redimensionar(self.__capacidad * 2)#si la tabla está muy llena se duplica su tamaño
-    
+            indice_bucket = self.__funcion_hash(elemento)#calcula en qué bucket va el elemento
+            bucket = self.__buckets[indice_bucket]#obtiene la lista correspondiente a ese bucket
+            if not bucket.miembro(elemento):#solo inserta elem. si no existe ya
+                bucket.inserte(elemento)
+                self.__tamanno += 1
     
