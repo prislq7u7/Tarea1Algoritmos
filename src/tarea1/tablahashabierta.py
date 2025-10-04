@@ -70,9 +70,8 @@ class TablaHashAbierta(Diccionario):#herencia de Diccionario
         print(self)
     
     def __str__(self) -> str: #como se ve la tabla
-        for bucket in self.__buckets:
-            resultado = []
-            for i, bucket in enumerate(self.__buckets):
-                if len(bucket) > 0:
-                    resultado.append(f"Bucket {i}: [{bucket}]")#como se ve cada bucket
-            return "\n".join(resultado) if resultado else "Tabla Hash Abierta vacía"
+        resultado = []
+        for i, bucket in enumerate(self.__buckets):
+            if len(bucket) > 0:
+                resultado.append(f"Bucket {i}: [{bucket}]")#como se ve cada bucket
+        return "\n".join(resultado) if resultado else "Tabla Hash Abierta vacía"
