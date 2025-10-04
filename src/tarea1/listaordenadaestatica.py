@@ -40,12 +40,12 @@ class ListaOrdenadaEstática(Diccionario):
         self.__tamaño = tamaño 
 
     def __len__(self):
-        # Verifica si no hay elementos en la lista, lo que haria que la cantidad de elementos es 0
+        # Verifica si no hay elementos en la lista, lo que haria que la cantidad de elementos sea 0
         if self.__último is None:
             return 0
         else:
-            #Si la cantidad de elementos es distinto de none, significa que, 
-            # ya que el indica inicia en 0, hay +1 elementos en la lista
+            #Si "self.__último" es distinto de none, significa que, hay uno o más elementos,
+            # y ya que el indice inicia en 0, hay +1 elementos en la lista
             return self.__último + 1
     
     def __getitem__(self, índice):
@@ -138,7 +138,8 @@ class ListaOrdenadaEstática(Diccionario):
             # Se verifica si tiene algun elemento, de lo contrario indica que se encuentra vacía
             return "Lista vacía"
         else:
-            return str(self.__arreglo)
+            # Devuelve todos las posiciones que tengan algun elemento por medio de un "for"
+            return ", ".join(self.__arreglo[i] for i in range(self.__último+1))
     
     def __del__(self):
         pass
