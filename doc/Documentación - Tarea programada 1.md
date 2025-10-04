@@ -11,7 +11,8 @@ Autores:
 *Karol Valeria Bolaños Sánchez, C31205*  
 *Priscilla López Quesada, C14301*
 
-**El programa se ejecuta con el comando "uv run tarea1", debe estar ubicado en la dirección "...\Tarea1Algoritmos"**
+**Para ejecutar:**
+-   Se ejecuta con el comando "uv run tarea1", debe estar ubicado en la dirección "...\Tarea1Algoritmos" al ingresar el comando.
 
 **Modelo Diccionario**  
 
