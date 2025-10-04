@@ -15,10 +15,10 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-from .diccionario import Diccionario
-from .listaordenadadinamica import ListaOrdenadaDinámica
-from .listaordenadaestatica import ListaOrdenadaEstática
-from .tablahashabierta import TablaHashAbierta
+from tarea1.diccionario import Diccionario
+from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
+from tarea1.listaordenadaestatica import ListaOrdenadaEstática
+from tarea1.tablahashabierta import TablaHashAbierta
 
 console = Console()
 
