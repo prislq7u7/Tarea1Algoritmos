@@ -21,6 +21,8 @@ from tarea1.listaordenadaestatica import ListaOrdenadaEstática
 from tarea1.tablahashabierta import TablaHashAbierta
 from tarea1.abbpunteros import ABBPunteros
 from tarea1.abbvectorheap import ABBVectorHeap
+from tarea1.triepunteros import TriePunteros
+from tarea1.triearreglos import TrieArreglos
 
 console = Console()
 
@@ -228,9 +230,9 @@ def menu_clase() -> Diccionario:
                 case "5":
                     return ABBVectorHeap()
                 case "6":
-                    pass
+                    return TriePunteros()
                 case "7":
-                    pass
+                    return TrieArreglos()
     except BaseException:
         raise ValueError("No se pudo instanciar una clase diccionario.")
 
