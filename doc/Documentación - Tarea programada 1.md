@@ -77,6 +77,30 @@ Redistribución:
 
 ---
 
+**Árbol de Búsqueda Binaria**
+
+Propiedad del ABB:
+- Para cualquier nodo:
+  - Todos los elementos en el subárbol **izquierdo** son **menores** que el nodo actual.
+  - Todos los elementos en el subárbol **derecho** son **mayores** que el nodo actual.
+  - No se permiten elementos duplicados.
+
+
+   **A.B.B. por punteros**
+        - Nodos enlazados donde cada nodo contiene:
+        - Un elemento (string de 20 chars max.)
+        - Un puntero al subárbol izquierdo.
+        - Un puntero al subárbol derecho.
+        - La raíz del árbol es un puntero al primer nodo.
+        - Los nodos hoja tienen ambos punteros en None.
+
+    **A.B.B. por vector heap**
+        - Simula un árbol binario completo.
+        - Tamaño fijo o redimensionable.
+        - Cada posición ocupa: tamaño(string) o referencia a None.
+
+---
+
 El programa principal ofrece un menú interactivo para realizar operaciones sobre el Diccionario con distintas implementaciones.  
 Permite:  
 
@@ -96,3 +120,10 @@ En esta primera etapa, hemos implementado y probado:
 - Diccionario con *Lista Ordenada Estática* .
 - Diccionario con *Tabla Hash Abierta*.  
 - Programa de prueba con menú de opciones.  
+
+## Estado de Avance 2
+
+En la segunda etapa, hemos implementado y probado:
+
+- Diccionario con *A.B.B. por vector heap*.  
+- Diccionario con *A.B.B. por punteros*.
