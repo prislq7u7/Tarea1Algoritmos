@@ -101,6 +101,30 @@ Propiedad del ABB:
 
 ---
 
+**Trie**
+
+Propiedad del Trie:
+- Estructura en forma de árbol donde cada nodo representa un carácter.
+- Los strings se almacenan siguiendo la ruta desde la raíz hasta un nodo hoja.
+- Strings que comparten prefijos comparten los mismos nodos iniciales.
+- Ideal para diccionarios con palabras que tienen prefijos comunes.
+
+   **Trie por punteros**
+    - Cada nodo contiene:
+        - Un diccionario que mapea caracteres → nodos hijos.
+        - Un indicador booleano que marca el fin de una palabra.
+    - Solo se crean nodos para caracteres que existen en las palabras.
+    - Flexible y eficiente en memoria para datos dispersos.
+
+    **Trie por arreglos**
+    - Cada nodo contiene:
+        - Un arreglo fijo de 26 posiciones (una por cada letra a-z).
+        - Un indicador booleano que marca el fin de una palabra.
+    - Acceso rápido a los hijos mediante cálculo de índices.
+    - Más memoria predecible pero puede desperdiciar espacio.
+
+---
+
 El programa principal ofrece un menú interactivo para realizar operaciones sobre el Diccionario con distintas implementaciones.  
 Permite:  
 
@@ -127,3 +151,5 @@ En la segunda etapa, hemos implementado y probado:
 
 - Diccionario con *A.B.B. por vector heap*.  
 - Diccionario con *A.B.B. por punteros*.
+- Diccionario con *Trie por punteros*.
+- Diccionario con *Trie por arreglos*.
