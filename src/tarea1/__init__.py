@@ -16,6 +16,7 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 
 from tarea1.diccionario import Diccionario
+from tarea1.rendimiento import Rendimiento
 from tarea1.listaordenadadinamica import ListaOrdenadaDinámica
 from tarea1.listaordenadaestatica import ListaOrdenadaEstática
 from tarea1.tablahashabierta import TablaHashAbierta
@@ -202,6 +203,21 @@ def render_menu_diccionario() -> None:
     )
     panel_contenido(cuerpo)
 
+def render_menu_rendimiento() -> None:
+    cuerpo = (
+        "\n"  # deja un margen superior dentro del panel
+        "            Comparación Pruebas\n\n"
+        "[1] L.O por punteros vs L.O por arreglos\n"
+        "[2] ABB por punteros vs ABB por VectorHeap\n"
+        "[3] Trie por punteros vs Trie por arreglos\n"
+        "[4] L.O por punteros vs Tabla Hash\n"
+        "[5] L.O por punteros vs ABB por punteros\n"
+        "[6] L.O por punteros vs Trie por punteros\n"
+        "[7] Tabla Hash vs Trie por Punteros\n\n"
+        "Digite una opción [_]"
+    )
+    panel_contenido(cuerpo)
+
 
 def menu_etapa() -> str:
     try:
@@ -262,6 +278,29 @@ def menu_diccionario(diccionario: Diccionario) -> None:
     finally:
         del diccionario
 
+def menu_rendimiento() -> Rendimiento:
+    try:
+        while True:
+            render_menu_rendimiento()
+            # leer una sola tecla válida y eco inmediato
+            opcion = leer_tecla("1234567")
+            match opcion:
+                case "1":
+                    pass
+                case "2":
+                    pass
+                case "3":
+                    pass
+                case "4":
+                    pass
+                case "5":
+                    pass
+                case "6":
+                    pass
+                case "7":
+                    pass
+    except BaseException:
+        raise ValueError("No se pudo instanciar una prueba de rendimiento.")
 
 def main() -> None:
     opcion = menu_etapa()
@@ -270,7 +309,8 @@ def main() -> None:
             diccionario = menu_clase()
             menu_diccionario(diccionario)
         case "2":
-            pass
+            rendimiento = menu_rendimiento()
+            menu_rendimiento(rendimiento)
 
 
 if __name__ == "__main__":

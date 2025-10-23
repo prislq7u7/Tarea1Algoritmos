@@ -9,3 +9,5 @@ from tarea1.triearreglos import TrieArreglos
 
 #En este archivo crearemos las pruebas de rendimiento
 
+class Rendimiento():
+    pass
