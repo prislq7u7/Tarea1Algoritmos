@@ -8,3 +8,4 @@ from tarea1.triepunteros import TriePunteros
 from tarea1.triearreglos import TrieArreglos
 
 #En este archivo crearemos las pruebas de rendimiento
+
