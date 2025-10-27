@@ -23,12 +23,15 @@ class TrieArreglos(Diccionario):
 
     def miembro(self, palabra: str) -> bool:
         # Verifica si una palabra está almacenada en el trie.
+        # Primero recorre cada letra de la palabra.
         actual = self.__raiz
         for letra in palabra:
             i = self.__indice_letra(letra)
+            #Si no hay nodo hijo, la plabra no existe y devuelve un false
             if actual.hijos[i] is None:
                 return False
             actual = actual.hijos[i]
+        # La palabra existe solo si el último nodo marca fin de palabra
         return actual.fin_palabra
 
     def borre(self, palabra: str) -> bool:
@@ -40,8 +43,10 @@ class TrieArreglos(Diccionario):
 
             # Caso base: llegamos al final de la palabra
             if indice == len(palabra):
+                # Si este nodo no marcaba fin de palabra, no había palabra que borrar
                 if not nodo.fin_palabra:
-                    return False  # No era palabra guardada
+                    return False
+                # Marca que ya no es fin de palabra
                 nodo.fin_palabra = False
                 # Retorna True si el nodo puede eliminarse (sin hijos)
                 return all(hijo is None for hijo in nodo.hijos)
@@ -57,10 +62,11 @@ class TrieArreglos(Diccionario):
                 return not nodo.fin_palabra and all(h is None for h in nodo.hijos)
             return False
 
-        # Si la palabra existe, la eliminamos
+        # Se verifica si la palabra existe, y se elimina
         if self.miembro(palabra):
             eliminar(self.__raiz, palabra, 0)
-            self.__tamanno -= 1  # Siempre que la palabra existía, reduce el contador
+            # Si la palabra existia, se reduce el contador
+            self.__tamanno -= 1 
             return True
         else:
             return False
@@ -74,11 +80,18 @@ class TrieArreglos(Diccionario):
         # Recorrido ordenado (de 'a' a 'z') para reconstruir las palabras.
         if nodo is None:
             return
+        # Si este nodo marca fin de palabra, agregamos la palabra completa
         if nodo.fin_palabra:
             resultado.append(prefijo)
-        for i in range(26):
-            if nodo.hijos[i] is not None:
-                letra = chr(i + ord('a'))
+        # Recorremos todos los posibles hijos en orden (a-z, ñ)
+        for i in range(27):
+            # Convertimos el índice de vuelta a letra
+                if i == 26:
+                    letra = 'ñ'
+                else:
+                    letra = chr(i + ord('a'))
+                    
+                # Llamada recursiva con el prefijo extendido
                 self.__inorden(nodo.hijos[i], prefijo + letra, resultado)
 
     def imprima(self):
@@ -96,13 +109,18 @@ class TrieArreglos(Diccionario):
         return self.__tamanno
 
     def __indice_letra(self, letra: str) -> int:
-        # Convierte una letra minúscula (a-z) a índice (0-25).
-        return ord(letra) - ord('a')
+        # Convierte una letra minúscula (a-z) a índice (0-26).
+        if letra == 'ñ':
+            # Se añidio la "ñ" con el indice 26
+            return 26
+        else:
+            return ord(letra) - ord('a')
 
 
 class NodoTrieArr:
     def __init__(self):
-        # Cada nodo tiene 26 posibles hijos, uno por cada letra del alfabeto
-        self.hijos = [None] * 26
+        # Cada nodo tiene 27 posibles hijos, uno por cada letra del alfabeto
+        # Inicialmente todas las posiciones son None (sin hijos)
+        self.hijos = [None] * 27
         # Indica si el nodo representa el fin de una palabra
         self.fin_palabra = False

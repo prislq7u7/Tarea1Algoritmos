@@ -11,12 +11,13 @@ class TriePunteros(Diccionario):
         # Inserta una palabra letra por letra en el trie.
         actual = self.__raiz
         for letra in palabra:
-            # Si la letra no existe en los hijos, se crea un nuevo nodo
+            # Si no existe un nodo hijo para esta letra, se crea un nuevo nodo
             if letra not in actual.hijos:
                 actual.hijos[letra] = NodoTriePunteros()
-            # Avanza al siguiente nodo
+            # Avanza al siguiente nodo hijo correspondiente a la letra actual
             actual = actual.hijos[letra]
-        # Marca el final de una palabra completa
+            
+        # Al finalizar la palabra, marca este nodo como fin de palabra
         if not actual.fin_palabra:
             actual.fin_palabra = True
             # Aumenta el contador solo si es palabra nueva
@@ -25,40 +26,47 @@ class TriePunteros(Diccionario):
     def miembro(self, palabra: str) -> bool:
         # Verifica si una palabra está almacenada en el trie.
         actual = self.__raiz
+        # Recorre cada letra de la palabra
         for letra in palabra:
             # Si falta alguna letra, la palabra no existe
             if letra not in actual.hijos:
                 return False
             actual = actual.hijos[letra]
-        return actual.fin_palabra  # True solo si marca fin de palabra
+        # La palabra existe solo si el último nodo marca fin de palabra
+        return actual.fin_palabra
 
     def borre(self, palabra: str) -> bool:
         # Elimina una palabra del trie y devuelve True si fue eliminada.
         def eliminar(nodo, palabra, indice):
-            # Caso base: llegamos al final de la palabra
+            # Caso base: llega al final de la palabra
             if indice == len(palabra):
+                # Si este nodo no marcaba fin de palabra, no había palabra que borrar
                 if not nodo.fin_palabra:
-                    return False  # La palabra no estaba guardada
+                    return False
+                
+                # Marca que ya no es fin de palabra
                 nodo.fin_palabra = False
-                # True si este nodo ya no tiene hijos (se puede borrar)
+                # Este nodo puede eliminarse si no tiene hijos
                 return len(nodo.hijos) == 0
 
             letra = palabra[indice]
+            # Si la letra actual no está en los hijos, la palabra no existe
             if letra not in nodo.hijos:
-                return False  # La palabra no existe
+                return False
 
             # Llamada recursiva para seguir bajando por la palabra
             puede_eliminar = eliminar(nodo.hijos[letra], palabra, indice + 1)
 
-            # Si el hijo puede eliminarse, lo borramos del diccionario de hijos
+            # Si el hijo puede eliminarse, se borra del diccionario de hijos
             if puede_eliminar:
                 del nodo.hijos[letra]
-                # Retorna True si este nodo también puede eliminarse
+                # Este nodo puede eliminarse si no es fin de palabra y no tiene hijos
                 return not nodo.fin_palabra and len(nodo.hijos) == 0
             return False
 
-        # Primero verificamos si la palabra está en el trie
+        # Verifica si la palabra está en el trie
         if self.miembro(palabra):
+            # Llama a la función recursiva de eliminación
             eliminar(self.__raiz, palabra, 0)
             # Reduce el contador si existe
             self.__tamanno -= 1  
@@ -73,6 +81,7 @@ class TriePunteros(Diccionario):
 
     def __inorden(self, nodo, prefijo, resultado):
         # Recorrido inorden alfabético, generando las palabras completas.
+        # Si este nodo marca fin de palabra, agrega la palabra completa (prefijo)
         if nodo.fin_palabra:
             resultado.append(prefijo)
         # Ordena las letras para mantener salida alfabética
@@ -97,6 +106,7 @@ class TriePunteros(Diccionario):
 class NodoTriePunteros:
     def __init__(self):
         # Cada nodo guarda sus hijos en un diccionario (letra → nodo hijo)
+        # Inicialmente vacío, se llena según las palabras insertadas
         self.hijos = {}
         # Indica si este nodo marca el final de una palabra válida
         self.fin_palabra = False
