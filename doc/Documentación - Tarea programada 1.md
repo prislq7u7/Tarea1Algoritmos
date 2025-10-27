@@ -73,8 +73,8 @@ Función Hash (__funcion_hash()):
 Redistribución:
     - Se da en la función __redimensionar(), cuando el (número de elementos / número de buckets) supera la carga máxima de la tabla, se duplica su capacidad. Se crea un nuevo arreglo de buckets vacíos con la nueva capacidad, a los elementos antiguos se les aplica la __funcion_hash() de nuevo y se reinsertan en los nuevos buckets.
     - El proceso de "redistribución" lo evaluamos en O(n) porque hay que recorrer todos los elementos e insertarlos de nuevo, pero solo ocurre cuando se excede el factor de carga máxima, por lo que no debe hacerse en cada corrida, así que en el mejor caso es O(1).
-
-
+---
+**IMPLEMENTACIONES DE LA SEGUNDA ENTREGA:**
 ---
 
 **Árbol de Búsqueda Binaria**
