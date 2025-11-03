@@ -17,8 +17,9 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 import gc
+#se debe instalar matplotlib para generar gráficos
 
-# Detectar si matplotlib está disponible para crear gráficos
+#detecta si matplotlib está disponible para crear gráficos
 try:
     import matplotlib.pyplot as plt
     MATPLOTLIB_DISPONIBLE = True
@@ -26,33 +27,33 @@ except ImportError:
     MATPLOTLIB_DISPONIBLE = False
 
 def medir_memoria_objeto(obj: Any) -> int:
-    # Mide la memoria utilizada de manera recursiva.
+    #mide la memoria de manera recursiva
     def _get_size(obj: Any, seen: set = None) -> int:
-        # Si es la primera llamada, inicializa.
+        #si es la primera llamada, inicializa
         if seen is None:
             seen = set()
         
-        # Evita ciclos infinitos
+        #evita ciclos infinitos
         obj_id = id(obj)
         if obj_id in seen:
             return 0
         
-        # Marca este objeto como visitado
+        #marca objeto como visitado
         seen.add(obj_id)
         
-        # Obtiene el tamaño básico del objeto
+        #obtiene el tamaño del objeto
         size = sys.getsizeof(obj)
         
-        # Si es un diccionario, suma el tamaño de claves y valores
+        #si es un diccionario, suma el tamaño de claves y valores
         if isinstance(obj, dict):
             size += sum(_get_size(k, seen) + _get_size(v, seen) for k, v in obj.items())
-        # Si es una colección, suma el tamaño de todos sus elementos
+        #si es una colección, suma el tamaño de todos sus elementos
         elif isinstance(obj, (list, tuple, set, frozenset)):
             size += sum(_get_size(item, seen) for item in obj)
-        # Si tiene atributos (objetos con __dict__), los procesa
+        #si tiene atributos procesa
         elif hasattr(obj, '__dict__'):
             size += _get_size(obj.__dict__, seen)
-        # Si usa __slots__, procesa los atributos definidos en slots
+        #procesa los atributos definidos en slots
         elif hasattr(obj, '__slots__'):
             for slot in obj.__slots__:
                 if hasattr(obj, slot):
@@ -63,117 +64,111 @@ def medir_memoria_objeto(obj: Any) -> int:
     return _get_size(obj)
 
 class Rendimiento:
-    # Clase para realizar comparaciones de rendimiento entre estructuras de datos, generando tablas y gráficos comparativos.
     
     def __init__(self):
-        # Inicializa la clase con tamaños de prueba.
-        # Tamaños de diccionarios: pequeño, mediano y grande
+        #inicializa la clase con tamaños de prueba
         self.tamanos = [100, 5000, 20000]
-        # Número de repeticiones para cada prueba
+        #número de repeticiones para cada prueba
         self.repeticiones = 10
         self.console = Console()
         
-        # Crear carpeta para gráficos si no existe y matplotlib está disponible
+        #crear carpeta para gráficos si no existe y matplotlib está disponible
         if MATPLOTLIB_DISPONIBLE and not os.path.exists("graficos"):
             os.makedirs("graficos")
     
     def generar_nombre_unico(self, base_nombre, extension="png"):
-        # Genera un nombre de archivo único para evitar sobreescribir gráficos.
+        #genera un nombre de archivo único para no sobreescribir
         nombre = f"{base_nombre}.{extension}"
         contador = 1
         
-        # Si el archivo ya existe, buscar un nombre único agregando 1, 2, etc.
+        #si archivo ya existe buscar un nombre único (1), (2)...
         while os.path.exists(os.path.join("graficos", nombre)):
             nombre = f"{base_nombre} ({contador}).{extension}"
-            contador += 1
+            contador += 1##aunmenta el contador hasta encontrar un nombre libre
         
         return nombre
     
     def generar_palabras(self, n: int) -> list:
-        # Genera una lista de palabras aleatorias para las pruebas.
+        #genera una lista de palabras rand para las pruebas
         return [''.join(random.choices(string.ascii_lowercase, k=20)) 
                 for _ in range(n)]
     
     def medir_operaciones(self, dicc, palabras):
-        # Mide los tiempos de todas las operaciones del diccionario.
+        #mide los tiempos de todas las operaciones 
         tiempos = {}
         
-        # Fuerza garbage collection antes de medir para obtener mediciones limpias
+        #fuerza garbage collection antes de medir para obtener mediciones limpias
         gc.collect()
         
-        # Mide la memoria antes de las operaciones (memoria base de la estructura)
+        #mide la memoria antes de las operaciones 
         memoria_inicial = medir_memoria_objeto(dicc)
         
-        # Medición de inserción
+        #mide insercion
         start = time.perf_counter() 
         for palabra in palabras:
-            dicc.inserte(palabra)    # Inserta todas las palabras
+            dicc.inserte(palabra) #inserta las palabras
         tiempos['insercion'] = time.perf_counter() - start
         
-        # Medición de búsqueda
+        #medición de búsqueda
         start = time.perf_counter()
-        # Busca solo las primeras 50 palabras
+        #busca solo las primeras 50 palabras
         for palabra in palabras[:50]:
             dicc.miembro(palabra)
         tiempos['busqueda'] = time.perf_counter() - start
         
-        # Medición de borrado
+        #medición de borrado
         start = time.perf_counter()
-        # Borra solo las primeras 30 palabras
+        #borra solo las primeras 30 palabras
         for palabra in palabras[:30]:
             dicc.borre(palabra)
         tiempos['borrado'] = time.perf_counter() - start
         
-        # Medición de print
+        #medición de print
         start = time.perf_counter()
-        str_repr = str(dicc)  # Simula operación print convirtiendo a string
+        str_repr = str(dicc)  #simula operación print convirtiendo a string
         tiempos['print'] = time.perf_counter() - start
         
-        # Medición de done
+        #medición de done
         start = time.perf_counter()
-        dicc.limpie()  # Limpia el diccionario
+        dicc.limpie() #limpia el diccionario
         tiempos['done'] = time.perf_counter() - start
         
-        # Mide la memoria despues de las operaciones (después de limpieza)
+        #mide la memoria despues de las operaciones
         memoria_final = medir_memoria_objeto(dicc)
-        tiempos['memoria'] = memoria_final  # Memoria base de la estructura
+        tiempos['memoria'] = memoria_final #memoria base de la estructura
         
         return tiempos
     
     def medir_memoria_estructura(self, constructor, tamanno: int) -> int:
         
-        # Mide la memoria utilizada por una estructura con N elementos
-        
-        # Forzar garbage collection
+        #Forza a garbage collection
         gc.collect()
         
-        # Crear nueva instancia y generar palabras de prueba
+        #crea nueva instancia y generar palabras de prueba
         dicc = constructor()
         palabras = self.generar_palabras(tamanno)
         
-        # Medir memoria inicial
+        #mide memoria inicial
         memoria_inicial = medir_memoria_objeto(dicc)
         
-        # Insertar todos los elementos
+        #inserta todos los elementos
         for palabra in palabras:
             dicc.inserte(palabra)
         
-        # Medir memoria con todos los elementos insertados
+        #mide memoria con todos los elementos insertados
         memoria_con_elementos = medir_memoria_objeto(dicc)
         
-        # Calcular memoria usada por los elementos (diferencia)
+        #calcula memoria usada por los elementos
         memoria_usada = memoria_con_elementos - memoria_inicial
         
-        # Limpiar la estructura
+        #limpia la estructura
         dicc.limpie()
         
         return memoria_usada
     
     def probar_estructura(self, constructor, tamanno):
         
-        # Ejecuta varias pruebas sobre una estructura y saca un promedio
-        
-        # Listas para almacenar resultados de cada repetición
+        #listas para almacenar resultados de cada repeti.
         tiempos_insercion = []
         tiempos_busqueda = []
         tiempos_borrado = []
@@ -181,19 +176,19 @@ class Rendimiento:
         tiempos_done = []
         memoria_usada = []
         
-        # Realiza varias repeticiones para obtener el promedio
+        #hace varias repeticiones para obtener promedio
         for _ in range(self.repeticiones):
-            # Limpiar memoria antes de cada prueba
+            #limpia memoria antes de cada prueba
             gc.collect()
             
-            # Crea una nueva instancia y genera palabras
+            #crea una nueva instancia y genera palabras
             dicc = constructor()
             palabras = self.generar_palabras(tamanno)
             
-            # Mide todas las operaciones
+            #mide todas las operaciones
             tiempos = self.medir_operaciones(dicc, palabras)
             
-            # Almacenar resultados de esta repetición
+            #almacena resultados de esta repetición
             tiempos_insercion.append(tiempos['insercion'])
             tiempos_busqueda.append(tiempos['busqueda'])
             tiempos_borrado.append(tiempos['borrado'])
@@ -201,12 +196,12 @@ class Rendimiento:
             tiempos_done.append(tiempos['done'])
             memoria_usada.append(tiempos['memoria'])
             
-            # Limpiar y liberar memoria
+            #limpia y libera memoria
             dicc.limpie()
             del dicc
             gc.collect()
         
-        # Retorna los promedios de todas las repeticiones
+        #retorna promedios de todas las repeticiones
         return {
             'insercion': sum(tiempos_insercion) / len(tiempos_insercion),
             'busqueda': sum(tiempos_busqueda) / len(tiempos_busqueda),
@@ -218,9 +213,7 @@ class Rendimiento:
     
     def crear_grafico_comparacion(self, nombre1, nombre2, resultados1, resultados2, titulo, num_comparacion):
         
-        # Crea gráficos con matplotlib.
-        
-        # Si matplotlib no está disponible, usar gráficos de texto
+        #si matplotlib no está instalado, usa gráficos de texto
         if not MATPLOTLIB_DISPONIBLE:
             self.crear_grafico_texto(nombre1, nombre2, resultados1, resultados2, titulo)
             return None
@@ -234,7 +227,7 @@ class Rendimiento:
             nombres_ops = ['Inserción', 'Búsqueda', 'Borrado', 'Print', 'Done']
             colores = ['blue', 'green', 'red', 'orange', 'purple']
             
-            # Crear un subgráfico para cada operación
+            # Crea un subgráfico para cada operación
             for i, (op, nombre_op, color) in enumerate(zip(operaciones, nombres_ops, colores)):
                 plt.subplot(2, 3, i + 1)  # Posición en la cuadrícula 2x3
                 
@@ -261,7 +254,7 @@ class Rendimiento:
                 plt.grid(True, alpha=0.3)
         
             plt.subplot(2, 3, 6)
-            # Convertir memoria de bytes a KB
+            # Convierte memoria de bytes a KB
             memoria1 = [resultados1[tam]['memoria'] / 1024 for tam in self.tamanos]
             memoria2 = [resultados2[tam]['memoria'] / 1024 for tam in self.tamanos]
             
@@ -302,6 +295,8 @@ class Rendimiento:
             self.console.print(f"[red]Error creando gráfico: {e}[/]")
             self.crear_grafico_texto(nombre1, nombre2, resultados1, resultados2, titulo)
             return None
+            
+        
     
     def crear_grafico_tendencias(self, nombre1, nombre2, resultados1, resultados2, titulo, num_comparacion):
         # Crea gráfico de tendencias para ver crecimiento.
@@ -319,7 +314,7 @@ class Rendimiento:
             marcadores = ['o', 's', '^']  # Marcadores para cada operación
             estilos_linea = ['-', '--', '-.']  # Estilos de línea para cada operación
             colores = ['blue', 'green', 'red']
-            
+        
             # Grafica cada operación para ambas estructuras
             for op, nombre_op, marcador, estilo, color in zip(operaciones, nombres_ops, marcadores, estilos_linea, colores):
                 tiempos1 = [resultados1[tam][op] for tam in self.tamanos]
@@ -463,15 +458,15 @@ class Rendimiento:
         resultados1 = {}
         resultados2 = {}
         
-        # Probar para cada tamaño de diccionario
+        # Prueba para cada tamaño de diccionario
         for tam in self.tamanos:
             self.console.print(f"Probando {tam} elementos...")
             
-            # Probar ambas estructuras
+            # Prueba ambas estructuras
             resultados1[tam] = self.probar_estructura(constructor1, tam)
             resultados2[tam] = self.probar_estructura(constructor2, tam)
             
-            # Definir operaciones a mostrar en tabla
+            # Define operaciones a mostrar en tabla
             operaciones = [
                 ('insercion', 'Inserción'),
                 ('busqueda', 'Búsqueda'), 
@@ -481,12 +476,12 @@ class Rendimiento:
                 ('memoria', 'Memoria')
             ]
             
-            # Agregar filas a la tabla para cada operación
+            # Agrega filas a la tabla para cada operación
             for op_key, op_nombre in operaciones:
                 val1 = resultados1[tam][op_key]
                 val2 = resultados2[tam][op_key]
                 
-                # Determinar ganador (menor tiempo/memoria)
+                # Determina ganador
                 if val1 < val2:
                     ganador = f"[green]{nombre1}[/]"
                     diferencia = f"({val2/val1:.1f}x)" if val1 > 0 else ""
@@ -509,11 +504,11 @@ class Rendimiento:
                         fmt_val1 = f"{val1:,.0f} B"
                         fmt_val2 = f"{val2:,.0f} B"
                 else:
-                    # Formatear tiempos
+                    #formatea tiempos
                     fmt_val1 = f"{val1:.4f}s"
                     fmt_val2 = f"{val2:.4f}s"
                 
-                # Agregar fila a la tabla
+                #agrega fila a la tabla
                 tabla.add_row(
                     f"{tam:,}" if op_key == 'insercion' else "",  # Mostrar tamaño solo en primera fila
                     op_nombre,
@@ -522,20 +517,20 @@ class Rendimiento:
                     f"{ganador} {diferencia}"
                 )
             
-            # Agregar separador entre tamaños
+            #agregar separador entre tamaños
             if tam != self.tamanos[-1]:
                 tabla.add_row("─" * 12, "─" * 15, "─" * 18, "─" * 18, "─" * 15)
         
-        # Mostrar tabla completa
+        #mostrar tabla completa
         self.console.print(tabla)
         
-        # Crear gráficos visuales
+        #crea gráficos visuales
         archivos_guardados = []
         
         if MATPLOTLIB_DISPONIBLE:
             self.console.print("\n Generando gráficos...")
             
-            # Crear diferentes tipos de gráficos
+            #crea diferentes tipos de gráficos
             archivo1 = self.crear_grafico_comparacion(nombre1, nombre2, resultados1, resultados2, titulo, num_comparacion)
             if archivo1:
                 archivos_guardados.append(archivo1)
@@ -551,33 +546,33 @@ class Rendimiento:
                 archivos_guardados.append(archivo3)
                 self.console.print(f"  [green]Gráfico de memoria: {archivo3}[/]")
         else:
-            # Usar gráficos ASCII si matplotlib no está disponible
+            #usa gráficos ascii si matplotlib no está disponible
             self.crear_grafico_texto(nombre1, nombre2, resultados1, resultados2, titulo)
         
-        # Mostrar resumen comparativo
+        #muestra resumen comparativo
         self._mostrar_resumen_comparacion(nombre1, nombre2, resultados1, resultados2)
         
         return resultados1, resultados2, archivos_guardados
     
     def _mostrar_resumen_comparacion(self, nombre1, nombre2, res1, res2):
         
-        # Muestra un resumen de victorias entre las estructuras comparadas.
+        #muestra un resumen de victorias entre las comparaciones
         self.console.print()
         self.console.print(Panel("RESUMEN COMPARATIVO", style="bold green"))
         
-        # Cuenta victorias para cada tamaño
+        #cuenta victorias para cada tamaño
         for tam in self.tamanos:
             victorias1 = 0
             victorias2 = 0
             
-            # Comparar cada operación
+            #comparar cada operación
             for op in ['insercion', 'busqueda', 'borrado', 'print', 'done', 'memoria']:
                 if res1[tam][op] < res2[tam][op]:
                     victorias1 += 1
                 elif res2[tam][op] < res1[tam][op]:
                     victorias2 += 1
             
-            # Mostrar resultado del enfrentamiento
+            #mostrar resultado del enfrentamiento
             if victorias1 > victorias2:
                 self.console.print(f" {tam:,} elementos: [bold green]{nombre1}[/] ({victorias1}-{victorias2})")
             elif victorias2 > victorias1:
@@ -587,11 +582,11 @@ class Rendimiento:
 
     def analizar_memoria_detallada(self):
         
-        # Realiza un análisis del uso de memoria para todas las estructuras.
+        #análisis del uso de memoria para todas las estructuras
         self.console.print()
         self.console.print(Panel("ANÁLISIS DETALLADO DE MEMORIA", style="bold cyan"))
         
-        # Define todas las estructuras a analizar
+        #define todas las estructuras a analizar
         estructuras = {
             "LO_Punteros": ListaOrdenadaDinámica,
             "LO_Arreglos": lambda: ListaOrdenadaEstática(50000),
@@ -602,7 +597,7 @@ class Rendimiento:
             "Trie_Arreglos": TrieArreglos
         }
         
-        # Crear tabla para resultados de memoria
+        #crea tabla para resultados de memoria
         tabla = Table(show_header=True, header_style="bold magenta")
         tabla.add_column("Estructura", style="cyan", width=20)
         for tam in self.tamanos:
@@ -610,20 +605,20 @@ class Rendimiento:
         
         resultados_memoria = {}
         
-        # Analizar memoria para cada estructura
+        #analizar memoria para cada estructura
         for nombre, constructor in estructuras.items():
             self.console.print(f"Analizando memoria de {nombre}...")
             fila = [nombre]
             memoria_por_tamanno = {}
             
-            # Medir memoria para cada tamaño
+            #medir memoria para cada tamaño
             for tam in self.tamanos:
                 try:
                     memoria_bytes = self.medir_memoria_estructura(constructor, tam)
                     memoria_kb = memoria_bytes / 1024
                     
-                    # Formatear resultado según tamaño
-                    if memoria_kb > 1024:  # Mostrar en MB si es grande
+                    #formatear resultado según tamaño
+                    if memoria_kb > 1024: 
                         fila.append(f"{memoria_kb/1024:.1f} MB")
                     else:
                         fila.append(f"{memoria_kb:.1f} KB")
@@ -631,19 +626,19 @@ class Rendimiento:
                     memoria_por_tamanno[tam] = memoria_bytes
                     
                 except Exception as e:
-                    # Manejar errores en medición
+                    #manejar errores en medición
                     fila.append(f"Error")
                     memoria_por_tamanno[tam] = 0
                     self.console.print(f"[red]Error en {nombre} con {tam}: {e}[/]")
             
-            # Almacenar resultados y agregar a tabla
+            #almacenar resultados y agregar a tabla
             resultados_memoria[nombre] = memoria_por_tamanno
             tabla.add_row(*fila)
         
-        # Mostrar tabla completa
+        #mostrar tabla completa
         self.console.print(tabla)
         
-        # Crear gráfico comparativo de memoria si es posible
+        #crea gráfico comparativo de memoria si es posible
         if MATPLOTLIB_DISPONIBLE:
             try:
                 plt.figure(figsize=(12, 8))
@@ -651,7 +646,7 @@ class Rendimiento:
                 colores = ['blue', 'green', 'red', 'orange', 'purple', 'brown', 'pink']
                 estilos = ['o-', 's--', '^-', 'd-.', '*-', 'x-', '+-']
                 
-                # Graficar cada estructura
+                #graficar cada estructura
                 for i, (nombre, memoria_data) in enumerate(resultados_memoria.items()):
                     memoria_mb = [memoria_data[tam] / (1024 * 1024) for tam in self.tamanos]
                     plt.plot(self.tamanos, memoria_mb, estilos[i % len(estilos)], 
@@ -663,7 +658,7 @@ class Rendimiento:
                 plt.title('Comparación de Memoria por Estructura de Datos')
                 plt.legend()
                 plt.grid(True, alpha=0.3)
-                plt.xscale('log')  # Escala logarítmica para mejor visualización
+                plt.xscale('log')  # Escala logarítmica
                 
                 # Guardar gráfico
                 nombre_archivo = self.generar_nombre_unico("memoria_comparativa_todas_estructuras")
@@ -694,15 +689,13 @@ class Rendimiento:
 
     def comparacion_2_ABB_punteros_vs_vectorheap(self):
         # Comparación 2: ABB por punteros vs Vector Heap con tamaños especiales
-        # Guardar los tamaños originales para restaurarlos después
+        #guarda los tamaños originales para restaurarlos después
         tamanos_originales = self.tamanos.copy()
     
-        # Usar tamaños MÁS PEQUEÑOS solo para esta comparación
-        # ABBVectorHeap tiene limitaciones de memoria con tamaños grandes
+        #ABBVectorHeap tiene limitaciones de memoria con tamaños grandes
         self.tamanos = [100, 1500, 3000]  # Tamaños reducidos para ABBVectorHeap
     
-        self.console.print("[yellow]  Usando tamaños reducidos para ABBVectorHeap (100, 1500, 3000)[/]")
-        self.console.print("[yellow]   debido a limitaciones de memoria en la implementación con VectorHeap[/]")
+        self.console.print("[yellow]Usando tamaños reducidos para ABBVectorHeap (100, 1500, 3000)")
     
         try:
             resultado = self.comparar_estructuras(
@@ -715,7 +708,7 @@ class Rendimiento:
             )
             return resultado
         finally:
-            # Restaurar los tamaños originales para las siguientes comparaciones
+            #restaurar los tamaños originales para las siguientes comparaciones
             self.tamanos = tamanos_originales
 
     def comparacion_3_Trie_punteros_vs_arreglos(self):
