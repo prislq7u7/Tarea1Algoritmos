@@ -3,7 +3,10 @@ name = "tarea1"
 version = "0.1.0"
 description = "Programa Diccionario"
 requires-python = ">=3.13"
-dependencies = ["rich>=14.1.0"]
+dependencies = [
+    "matplotlib>=3.10.7",
+    "rich>=14.1.0",
+]
 
 [project.scripts]
 tarea1 = "tarea1:main" 
