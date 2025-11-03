@@ -14,6 +14,7 @@ from rich.align import Align
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
+from rich.table import Table
 
 from tarea1.diccionario import Diccionario
 from tarea1.rendimiento import Rendimiento
@@ -213,7 +214,8 @@ def render_menu_rendimiento() -> None:
         "[4] L.O por punteros vs Tabla Hash\n"
         "[5] L.O por punteros vs ABB por punteros\n"
         "[6] L.O por punteros vs Trie por punteros\n"
-        "[7] Tabla Hash vs Trie por Punteros\n\n"
+        "[7] Tabla Hash vs Trie por Punteros\n"
+        "[8] Salir\n\n"
         "Digite una opción [_]"
     )
     panel_contenido(cuerpo)
@@ -278,29 +280,36 @@ def menu_diccionario(diccionario: Diccionario) -> None:
     finally:
         del diccionario
 
-def menu_rendimiento() -> Rendimiento:
+def menu_rendimiento():
+    comparador = Rendimiento()
+    
     try:
         while True:
             render_menu_rendimiento()
             # leer una sola tecla válida y eco inmediato
-            opcion = leer_tecla("1234567")
+            opcion = leer_tecla("12345678")
             match opcion:
                 case "1":
-                    pass
+                    comparador.comparacion_1_LO_punteros_vs_arreglos()
                 case "2":
-                    pass
+                    comparador.comparacion_2_ABB_punteros_vs_vectorheap()
                 case "3":
-                    pass
+                    comparador.comparacion_3_Trie_punteros_vs_arreglos()
                 case "4":
-                    pass
+                    comparador.comparacion_4_LO_punteros_vs_tablahash()
                 case "5":
-                    pass
+                    comparador.comparacion_5_LO_punteros_vs_ABB_punteros()
                 case "6":
-                    pass
+                    comparador.comparacion_6_LO_punteros_vs_Trie_punteros()
                 case "7":
-                    pass
+                    comparador.comparacion_7_TablaHash_vs_Trie_punteros()
+                case "8":
+                    console.clear()
+                    break
     except BaseException:
         raise ValueError("No se pudo instanciar una prueba de rendimiento.")
+    except Exception as e:
+        console.print(f"[red]Error durante las pruebas: {e}[/]")
 
 def main() -> None:
     opcion = menu_etapa()
@@ -309,8 +318,7 @@ def main() -> None:
             diccionario = menu_clase()
             menu_diccionario(diccionario)
         case "2":
-            rendimiento = menu_rendimiento()
-            menu_rendimiento(rendimiento)
+            menu_rendimiento()
 
 
 if __name__ == "__main__":
