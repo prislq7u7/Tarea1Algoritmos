@@ -130,6 +130,10 @@ Propiedad del Trie:
 ---
 
 Se creó el archivo rendimiento.py y se modificó _init_.py únicamente.
+Por el uso de gráficos, se debe instalar **matplotlib**.
+    Pasos:
+        - En terminal digitar comando para instarlo globalmente: pip install matplotlib
+        - Luego, igual en terminal, se debe digitar este comando para instalarlo dentro de uv: uv add matplotlib
 
 **rendimiento.py:**
     -Importa de todos los demás archivos las demás estructuras de datos para hacer funciones de comparaciones, siendo estas:
