@@ -123,6 +123,32 @@ Propiedad del Trie:
     - Acceso rápido a los hijos mediante cálculo de índices.
     - Más memoria predecible pero puede desperdiciar espacio.
 
+
+
+---
+**IMPLEMENTACIONES DE LA TERCERA ENTREGA:**
+---
+
+Se creó el archivo rendimiento.py y se modificó _init_.py únicamente.
+
+**rendimiento.py:**
+    -Importa de todos los demás archivos las demás estructuras de datos para hacer funciones de comparaciones, siendo estas:
+        • L.O. por punteros vs L.O. por arreglos. 
+        • A.B.B por punteros vs A.B.B por vector heap. 
+        • Trie por punteros vs Trie por arreglos 
+        • L.O. por punteros vs Tabla Hash (sin considerar redistribución) 
+        • L.O. por punteros vs A.B.B. por punteros. 
+        • L.O. por punteros vs Trie por punteros. 
+        • Tabla Hash (sin considerar redistribución) vs Trie por punteros.
+    -Mide el rendimiento del tiempo que utiliza cada comparación sobre diccionarios de diversos tamaños (100,5000,20000) -> Excepto la primera comparación, que por tema de desborde de memoria, utiliza un tamaño fijo de diccionarios específico (100,1500,3000).
+    -Mide la memoria utilizada por cada estructura de datos en las comparaciones, según cada tamaño de diccionario utilizado.
+    -Crea tablas para facilitar la comparación de las diversas funciones de estructuras de datos que utilizan el diccionario.
+    -Crea gráficos a partir de dichas tablas para facilitar el entendimiento de las mismas.
+    -Hay una función por cada comparación a realizar, facilitando el llamado en el menú.
+
+**_init_.py:**
+    -Se creó un menú interno luego de que al usuario se le presenten dos opciones, si utilizar cada estructura de datos por aparte para ellos mismos crear su propio diccionario, o crear pruebas de rendimiento comparando las estructuras de datos entre sí, está el menú render y el menú_rendimiento, uno usado para la visualización del usuario, el otro para la funcionalidad del mismo. Dentro de este se habilitaron opciones del 1-8, las primeras 7 para las comparaciones de las estructuras de datos, y el 8 para salir del programa.
+
 ---
 
 El programa principal ofrece un menú interactivo para realizar operaciones sobre el Diccionario con distintas implementaciones.  
@@ -153,3 +179,12 @@ En la segunda etapa, hemos implementado y probado:
 - Diccionario con *A.B.B. por punteros*.
 - Diccionario con *Trie por punteros*.
 - Diccionario con *Trie por arreglos*.
+
+## Estado de Avance 3
+
+En la tercera etapa, hemos implementado y probado:
+
+- Programa de análisis que permita obtener tiempos de duración y uso de espacio para las diferentes 
+estructuras de datos y para diferentes tipos y tamaños de diccionarios. 
+- Reporte final: cuadros, gráficos, limitaciones, rangos para N.
+
